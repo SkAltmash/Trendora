@@ -3,7 +3,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import Cart from '../components/Cart';
 import { useSearchParams } from 'react-router-dom';
-
+import ProductPageSkeleton from '../components/ProductPageSkeleton';
 function Productpage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -121,8 +121,7 @@ function Productpage() {
       )}
 
       {/* Product Grid */}
-      {loading ? (
-        <p className="text-center text-lg font-medium text-gray-600">Loading products...</p>
+      {loading ? (<ProductPageSkeleton/>
       ) : filteredProducts.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {filteredProducts.map((item) => (

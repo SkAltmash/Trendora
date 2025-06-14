@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import FavoriteButton from '../components/FavoriteButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faEye } from '@fortawesome/free-solid-svg-icons';
-
+import ProductDetailSkeleton from '../components/ProductDetailSkeleton';
 function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
@@ -95,13 +95,13 @@ function ProductDetail() {
   };
 
   if (loading) {
-    return <div className="text-center py-20 text-xl font-semibold">Loading...</div>;
+    return  <ProductDetailSkeleton />;
   }
 
   if (!product) {
     return <div className="text-center mt-10 text-red-500 text-xl">Product not found.</div>;
   }
-
+  window.scrollTo(0, 0); // Scroll to top on product detail page load
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 mt-20">
       <div className="flex flex-col md:flex-row gap-8">

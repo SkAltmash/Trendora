@@ -122,7 +122,7 @@ const AdminOrders = () => {
                   {order.cart.map((item, idx) => (
                     <li key={idx} className="flex items-center gap-3">
                       <img
-                        src={`/${item.mainImage?.trim()}`}
+                        src={item.id >= 31 ?item.mainImage : `/${item.mainImage}`}
                         alt={item.title}
                         className="w-10 h-10 object-cover rounded border"
                       />

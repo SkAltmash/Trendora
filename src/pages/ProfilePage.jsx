@@ -206,7 +206,7 @@ const ProfilePage = () => {
                       className="flex items-center py-3 gap-4"
                     >
                       <img
-                        src={`/${item.mainImage?.trim()}`}
+                        src={item.id >= 31 ?item.mainImage : `/${item.mainImage}`}
                         alt={item.title}
                         className="w-14 h-14 rounded object-cover border"
                       />

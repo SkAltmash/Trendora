@@ -7,7 +7,7 @@ import { db } from '../firebase';
 import Cart from '../components/Cart';
 import '../styles/animatedGradient.css';
 import { FaArrowRight } from 'react-icons/fa';
-
+import MainpageSkeleton from '../components/MainpageSkeleton';
 const Mainpage = () => {
   const { addToCart } = useCart();
   const [products, setProducts] = useState([]);
@@ -36,7 +36,7 @@ const Mainpage = () => {
   return (
     <div className="bg-gradient-to-b from-white via-slate-50 to-white min-h-screen text-gray-800 font-sans">
       {loading ? (
-        <div className="text-center py-20 text-xl font-semibold">Loading products...</div>
+       <MainpageSkeleton />
       ) : (
         <>
           {/* Hero Section */}
@@ -119,7 +119,7 @@ const Mainpage = () => {
                     See All <FaArrowRight className="text-xs mt-[1px]" />
                   </Link>
                 </div>
-                <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                <div className="flex flex-wrap justify-center gap-2 md:gap-6">
                   {filterProducts('men', category).map(item => (
                     <motion.div whileHover={{ scale: 1.03 }} key={item.id}>
                       <Cart item={item} />
@@ -151,7 +151,7 @@ const Mainpage = () => {
                     See All <FaArrowRight className="text-xs mt-[1px]" />
                   </Link>
                 </div>
-                <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                <div className="flex flex-wrap justify-center gap-2 md:gap-6">
                   {filterProducts('women', category).map(item => (
                     <motion.div whileHover={{ scale: 1.03 }} key={item.id}>
                       <Cart item={item} />
