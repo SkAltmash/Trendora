@@ -1,0 +1,29 @@
+.animated-gradient {
+  background: linear-gradient(270deg, #7e5bef, #5f72ff, #8a3ffc, #5e60ce);
+  background-size: 600% 600%;
+  animation: gradientAnimation 12s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.footer-animated {
+  background: linear-gradient(270deg, #7f5af0, #ff6ac1, #5ddcff);
+  background-size: 600% 600%;
+  animation: gradientShift 10s ease infinite;
+}
