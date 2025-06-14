@@ -65,7 +65,7 @@ const Mainpage = () => {
 
           {/* Promo Banner */}
           <section className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 py-4 px-6 text-center text-white font-medium text-lg shadow-md">
-            🚨 Limited Time Offer! Get <span className="font-bold">10% OFF</span> on orders above ₹999 – Use code <span className="font-semibold underline">TREND10</span>
+           <marquee behavior="" direction="">  Limited Time Offer! Get <span className="font-bold">10% OFF</span> on orders above ₹999 – Use code <span className="font-semibold underline">TREND10</span></marquee>
           </section>
 
           {/* Category Blocks */}

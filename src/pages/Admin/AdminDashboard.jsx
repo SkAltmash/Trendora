@@ -160,8 +160,10 @@ const AdminDashboard = () => {
             <QuickLink to="/admin/products" title="Manage Products" color="blue" />
             <QuickLink to="/admin/orders" title="Manage Orders" color="green" />
             <QuickLink to="/admin/user" title="Manage Users" color="yellow" />
+            <QuickLink to="/admin/coupons" title="Manage Coupons Codes" color="green" />
+
           </div>
-          
+
           {/* Charts */}
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             <div className="bg-white p-4 rounded shadow h-[300px] md:h-[400px] max-w-screen">
