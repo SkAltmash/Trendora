@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 function Cart({ item }) {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <Link to={`/product/${item.id}`}>
       <div className="w-40 md:w-55 rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer">

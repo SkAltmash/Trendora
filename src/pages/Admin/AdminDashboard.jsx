@@ -5,6 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate, Link } from 'react-router-dom';
 import { Bar, Doughnut } from 'react-chartjs-2';
+import FullPageLoader from '../../components/FullPageLoader';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -91,7 +92,7 @@ const AdminDashboard = () => {
     }
   }, [loading, currentUser]);
 
-  if (loading) return <div className="text-center mt-20 text-xl">Loading user data...</div>;
+  if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') return <Navigate to="/" />;
 
   // Bar Chart Data (Monthly Revenue)
@@ -142,12 +143,9 @@ const AdminDashboard = () => {
       <h1 className="text-3xl font-bold text-indigo-700 mb-6">Admin Dashboard</h1>
 
       {loadingStats ? (
-          <div className='flex w-screen justify-center h-screen'> 
-          <img src="/public/assets/img/loading.gif" className='object-cover' alt="" />
-         </div>
-
+        <FullPageLoader />
       ) : (
-<>        
+        <>
           {/* Stats Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
             <StatCard title="Users" value={stats.users} color="bg-blue-500" />
@@ -155,7 +153,15 @@ const AdminDashboard = () => {
             <StatCard title="Orders" value={stats.orders} color="bg-purple-500" />
             <StatCard title="Revenue" value={`₹${stats.revenue}`} color="bg-yellow-500" />
           </div>
+     
 
+       {/* Quick Links */}
+          <div className="grid sm:grid-cols-3 gap-4 mb-10">
+            <QuickLink to="/admin/products" title="Manage Products" color="blue" />
+            <QuickLink to="/admin/orders" title="Manage Orders" color="green" />
+            <QuickLink to="/admin/user" title="Manage Users" color="yellow" />
+          </div>
+          
           {/* Charts */}
           <div className="grid md:grid-cols-2 gap-8 mb-10">
             <div className="bg-white p-4 rounded shadow h-[300px] md:h-[400px] max-w-screen">
@@ -164,7 +170,7 @@ const AdminDashboard = () => {
                 <Bar data={barData} options={barOptions} />
               </div>
             </div>
-            <div className="bg-white p-4 rounded shadow h-[300px] md:h-[400px] max-w-screen">
+            <div className="bg-white p-4 rounded shadow h-[300px] md:h-[400px]">
               <h2 className="text-lg font-semibold mb-2 text-indigo-700">Order Status</h2>
               <div className="h-full">
                 <Doughnut data={pieData} options={pieOptions} />
@@ -172,12 +178,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="grid sm:grid-cols-3 gap-4 mb-10">
-            <QuickLink to="/admin/products" title="Manage Products" color="blue" />
-            <QuickLink to="/admin/orders" title="Manage Orders" color="green" />
-            <QuickLink to="/admin/user" title="Manage Users" color="yellow" />
-          </div>
+        
 
           {/* Recent Orders */}
           <div>

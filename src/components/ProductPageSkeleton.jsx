@@ -2,6 +2,8 @@ import React from 'react';
 import '../styles/skeleton.css'; 
 
 const ProductPageSkeleton = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <div className="min-h-screen bg-gray-100 px-4 py-8">
       <div className="h-8 w-48 bg-skeleton mb-6 mx-auto rounded"></div>

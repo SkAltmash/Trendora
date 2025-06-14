@@ -10,6 +10,8 @@ const SkeletonCategory = () => (
 );
 
 const MainpageSkeleton = () => {
+window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <div className="bg-gradient-to-b from-white via-slate-50 to-white min-h-screen px-4 py-10">
       {/* Hero Skeleton */}

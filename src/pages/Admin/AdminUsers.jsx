@@ -3,7 +3,7 @@ import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-
+import FullPageLoader from '../../components/FullPageLoader';
 const AdminUsers = () => {
   const { currentUser, loading } = useAuth();
   const [users, setUsers] = useState([]);
@@ -36,9 +36,9 @@ const AdminUsers = () => {
     }
   }, [loading, currentUser]);
 
-  if (loading) return <div className="mt-20 text-center text-xl">Loading user...</div>;
+  if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') return <Navigate to="/" />;
-  if (fetching) return <div className="mt-20 text-center text-xl">Loading data...</div>;
+  if (fetching) return <FullPageLoader />;
 
   return (
     <div className="max-w-6xl mx-auto p-6 mt-20">

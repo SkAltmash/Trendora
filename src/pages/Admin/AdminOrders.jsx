@@ -10,7 +10,7 @@ import {
 import { db } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-
+import FullPageLoader from '../../components/FullPageLoader';
 const AdminOrders = () => {
   const { currentUser, loading } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -63,13 +63,13 @@ const AdminOrders = () => {
   });
 
   // Security
-  if (loading) return <div className="text-center mt-20">Loading user data...</div>;
+  if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') {
     console.warn('Unauthorized access attempt:', currentUser?.email);
     return <Navigate to="/" />;
   }
 
-  if (fetching) return <div className="text-center mt-20">Loading orders...</div>;
+  if (fetching) return <FullPageLoader />;
 
   return (
     <div className="max-w-6xl mx-auto p-6 mt-20">

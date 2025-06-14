@@ -4,12 +4,14 @@ import {
   collection,
   getDocs,
   updateDoc,
+  deleteDoc,
   doc,
   query,
   orderBy,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
+import FullPageLoader from '../../components/FullPageLoader';
 
 const AdminProducts = () => {
   const { currentUser, loading } = useAuth();
@@ -59,6 +61,20 @@ const AdminProducts = () => {
     await updateQuantity(firebaseId, newQty);
   };
 
+  const deleteProduct = async (firebaseId) => {
+    const confirm = window.confirm('Are you sure you want to delete this product?');
+    if (!confirm) return;
+
+    try {
+      await deleteDoc(doc(db, 'products', firebaseId));
+      setProducts((prev) => prev.filter((p) => p.firebaseId !== firebaseId));
+      alert('Product deleted successfully.');
+    } catch (err) {
+      console.error('Error deleting product:', err);
+      alert('Failed to delete product.');
+    }
+  };
+
   const applyFilters = () => {
     let result = [...products];
     if (genderFilter !== 'All') result = result.filter(p => p.gender === genderFilter);
@@ -70,9 +86,9 @@ const AdminProducts = () => {
     applyFilters();
   }, [genderFilter, categoryFilter, products]);
 
-  if (loading) return <div className="text-center mt-20 text-xl">Loading user data...</div>;
+  if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') return <Navigate to="/" />;
-  if (fetching) return <div className="text-center mt-20 text-xl">Loading products...</div>;
+  if (fetching) return <FullPageLoader />;
 
   const categories = ['All', ...new Set(products.map(p => p.category))];
   const genders = ['All', ...new Set(products.map(p => p.gender))];
@@ -167,6 +183,13 @@ const AdminProducts = () => {
                 }`}
               >
                 {product.quantity === 0 ? 'Mark In Stock' : 'Mark Out of Stock'}
+              </button>
+
+              <button
+                onClick={() => deleteProduct(product.firebaseId)}
+                className="mt-2 px-4 py-1 ml-2 rounded text-sm bg-red-600 hover:bg-red-7000 text-white border border-red-400"
+              >
+                Delete
               </button>
             </div>
           ))}

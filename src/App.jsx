@@ -22,7 +22,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import AdminUsers from './pages/Admin/AdminUsers';
 import { FavoriteProvider } from './context/FavoriteContext'; 
 import FavoritesPage from './pages/FavoritesPage';
-
+import EditProduct from './pages/Admin/ EditProduct';
 function App() {
   return (
     <AuthProvider> 
@@ -46,7 +46,7 @@ function App() {
 
        <Route path="/admin/dashboard" element={<AdminDashboard />} />
        <Route path="/favorites" element={<FavoritesPage />} />
-
+        <Route path='/admin/edit-product/:id' element={<EditProduct />} />
       </Routes>
         <Footer />
 

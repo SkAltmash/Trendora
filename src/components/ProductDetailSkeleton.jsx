@@ -2,6 +2,8 @@ import React from 'react';
 import '../styles/skeleton.css'; 
 
 const ProductDetailSkeleton = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 mt-20 animate-pulse">
       <div className="flex flex-col md:flex-row gap-8">

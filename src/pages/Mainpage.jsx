@@ -43,8 +43,7 @@ const Mainpage = () => {
           <section className="relative animated-gradient text-white py-28 text-center px-4 overflow-hidden">
             <div className="absolute w-80 h-80 bg-purple-400 blur-3xl opacity-30 top-[-100px] right-[-100px] rounded-full z-0" />
             <div className="absolute w-72 h-72 bg-indigo-400 blur-2xl opacity-20 bottom-[-80px] left-[-80px] rounded-full z-0" />
-
-            <motion.div
+         <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
@@ -74,11 +73,11 @@ const Mainpage = () => {
             <h2 className="text-3xl font-bold text-center mb-10 text-indigo-700">Shop by Category</h2>
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { gender: 'men', category: 'tshirt', label: "Men's T-Shirts" },
-                { gender: 'men', category: 'joggers', label: "Men's Joggers" },
-                { gender: 'women', category: 'tshirt', label: "Women's T-Shirts" },
-                { gender: 'women', category: 'joggers', label: "Women's Joggers" },
-              ].map(({ gender, category, label }) => (
+                { gender: 'men', category: 'tshirt', label: "Men's T-Shirts",imgsrc:"https://images.bewakoof.com/uploads/grid/app/444x666-Desktop-OS-T-shirts-Trending-Category-Icon--1--1748005029.jpg" },
+                { gender: 'men', category: 'joggers', label: "Men's Joggers",imgsrc:"https://images.bewakoof.com/uploads/grid/app/444x666-Desktop-Joggers-Trending-Category-Icon-1747726637.jpg" },
+                { gender: 'women', category: 'tshirt', label: "Women's T-Shirts",imgsrc:"https://images.bewakoof.com/uploads/grid/app/444x666-Desktop-OS-Tshirts-WomenTrending-Category-Icon-1747724475.jpg" },
+                { gender: 'women', category: 'joggers', label: "Women's Joggers",imgsrc:"https://images.bewakoof.com/uploads/grid/app/444x666-Desktop-Joggers-WomenTrending-Category-Icon-1747724475.jpg" },
+              ].map(({ gender, category, label,imgsrc }) => (
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   initial={{ opacity: 0, y: 20 }}
@@ -90,6 +89,7 @@ const Mainpage = () => {
                   key={`${gender}-${category}`}
                 >
                   <Link to={`/products?gender=${gender}&category=${category}`}>
+                     <img src={imgsrc} alt="" className='object-cover rounded-3xl' />
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">{label}</h3>
                     <p className="text-gray-500 text-sm">Explore now</p>
                   </Link>
