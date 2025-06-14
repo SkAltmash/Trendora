@@ -101,18 +101,15 @@ function ProductDetail() {
   if (!product) {
     return <div className="text-center mt-10 text-red-500 text-xl">Product not found.</div>;
   }
-  window.scrollTo(0, 0); // Scroll to top on product detail page load
+  window.scrollTo(0, 0);
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 mt-20">
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Image Section */}
         <div className="md:w-1/2 w-full relative">
-          {/* ❤️ Favorite */}
           <div className="absolute top-3 right-3 z-20">
             <FavoriteButton productId={product.id} size="lg" />
           </div>
 
-          {/* ⬅️➡️ Arrows for desktop only */}
           {product.images?.length > 1 && (
             <>
               <button
@@ -217,7 +214,7 @@ function ProductDetail() {
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
             You May Also Like
           </h2>
-          <div className="flex flex-wrap justify-center gap-4">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-4">
             {relatedProducts.map(item => (
               <Link to={`/product/${item.id}`} key={item.id}>
                 <div className="w-40 md:w-55 rounded overflow-hidden shadow-lg bg-white hover:shadow-xl transition duration-300 cursor-pointer">

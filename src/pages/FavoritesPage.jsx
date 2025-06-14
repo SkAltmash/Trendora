@@ -21,7 +21,6 @@ const FavoritesPage = () => {
           return;
         }
 
-        // Firestore only supports 10 items in "in" query
         const chunks = [];
         for (let i = 0; i < favorites.length; i += 10) {
           chunks.push(favorites.slice(i, i + 10));
@@ -63,7 +62,7 @@ const FavoritesPage = () => {
       ) : products.length === 0 ? (
         <p className="text-gray-500 text-center">You haven't favorited any products yet.</p>
       ) : (
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
           {products.map(product => (
             <Cart key={product.id} item={product} />
           ))}
