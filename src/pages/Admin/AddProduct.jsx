@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const AddProduct = () => {
   const [form, setForm] = useState({
@@ -47,11 +48,11 @@ const AddProduct = () => {
       };
 
       await addDoc(collection(db, 'products'), newProduct);
-      alert('Product added successfully!');
+      toast.success('Product added successfully!');
       navigate('/admin/products');
     } catch (err) {
       console.error('Failed to add product:', err);
-      alert('Error adding product.');
+      toast.error('Error adding product.');
     } finally {
       setLoading(false);
     }

@@ -30,7 +30,7 @@ function CheckoutPage() {
   );
 
  const handlePlaceOrder = async () => {
-  if (!address.trim()) return alert('Please enter your address.');
+  if (!address.trim()) return toast.error('Please enter your address.');
 
   try {
     setPlacingOrder(true);

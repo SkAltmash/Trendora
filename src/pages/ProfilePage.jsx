@@ -20,11 +20,13 @@ import {
   faMoneyBillWave,
   faIdBadge,
 } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 const ProfilePage = () => {
   const { currentUser } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cancelTarget, setCancelTarget] = useState(null); // orderId for modal
 
   useEffect(() => {
     if (!currentUser) return;
@@ -51,25 +53,24 @@ const ProfilePage = () => {
     fetchOrders();
   }, [currentUser]);
 
-  const cancelOrder = async (orderId) => {
-    const confirmCancel = window.confirm(
-      'Are you sure you want to cancel this order?'
-    );
-    if (!confirmCancel) return;
+  const confirmCancel = (orderId) => setCancelTarget(orderId);
 
+  const handleCancel = async () => {
     try {
-      await updateDoc(doc(db, 'orders', orderId), {
+      await updateDoc(doc(db, 'orders', cancelTarget), {
         status: 'cancelled',
       });
       setOrders((prev) =>
         prev.map((order) =>
-          order.id === orderId ? { ...order, status: 'cancelled' } : order
+          order.id === cancelTarget ? { ...order, status: 'cancelled' } : order
         )
       );
-      alert('Order cancelled successfully.');
+      toast.success('Order cancelled successfully.');
     } catch (error) {
       console.error('Cancel failed:', error);
-      alert('Failed to cancel the order.');
+      toast.error('Failed to cancel the order.');
+    } finally {
+      setCancelTarget(null);
     }
   };
 
@@ -99,12 +100,8 @@ const ProfilePage = () => {
           />
         </div>
         <p className="text-lg font-semibold">{currentUser.name || 'User'}</p>
-        <p>
-          <strong>Email:</strong> {currentUser.email}
-        </p>
-        <p>
-          <strong>User ID:</strong> {currentUser.uid}
-        </p>
+        <p><strong>Email:</strong> {currentUser.email}</p>
+        <p><strong>User ID:</strong> {currentUser.uid}</p>
       </div>
 
       {/* Orders */}
@@ -123,100 +120,48 @@ const ProfilePage = () => {
             >
               {/* Order Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-700 mb-4">
+                <p><FontAwesomeIcon icon={faIdBadge} className="mr-2 text-indigo-500" /><strong>Order ID:</strong> {order.id}</p>
+                <p><FontAwesomeIcon icon={faCalendarAlt} className="mr-2 text-indigo-500" /><strong>Date:</strong> {order.createdAt?.toDate().toLocaleString()}</p>
+                <p><FontAwesomeIcon icon={faCreditCard} className="mr-2 text-indigo-500" /><strong>Payment:</strong> {order.paymentMethod.toUpperCase()}</p>
                 <p>
-                  <FontAwesomeIcon
-                    icon={faIdBadge}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Order ID:</span> {order.id}
-                </p>
-                <p>
-                  <FontAwesomeIcon
-                    icon={faCalendarAlt}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Date:</span>{' '}
-                  {order.createdAt?.toDate().toLocaleString()}
-                </p>
-                <p>
-                  <FontAwesomeIcon
-                    icon={faCreditCard}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Payment:</span>{' '}
-                  {order.paymentMethod.toUpperCase()}
-                </p>
-                <p>
-                  <FontAwesomeIcon
-                    icon={faBoxOpen}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Status:</span>{' '}
-                  <span
-                    className={`inline-block px-2 py-1 rounded text-white ${
-                      order.status === 'pending'
-                        ? 'bg-yellow-500'
-                        : order.status === 'cancelled'
-                        ? 'bg-red-500'
-                        : 'bg-green-600'
-                    }`}
-                  >
+                  <FontAwesomeIcon icon={faBoxOpen} className="mr-2 text-indigo-500" />
+                  <strong>Status:</strong>{' '}
+                  <span className={`inline-block px-2 py-1 rounded text-white ${
+                    order.status === 'pending' ? 'bg-yellow-500' :
+                    order.status === 'cancelled' ? 'bg-red-500' : 'bg-green-600'
+                  }`}>
                     {order.status}
                   </span>
                   {order.status === 'pending' && (
                     <button
-                      onClick={() => cancelOrder(order.id)}
+                      onClick={() => confirmCancel(order.id)}
                       className="ml-2 px-3 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700"
                     >
                       Cancel Order
                     </button>
                   )}
                 </p>
-                <p>
-                  <FontAwesomeIcon
-                    icon={faMoneyBillWave}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Total:</span> ₹
-                  {order.totalAmount}
-                </p>
-                <p>
-                  <FontAwesomeIcon
-                    icon={faMapMarkerAlt}
-                    className="mr-2 text-indigo-500"
-                  />
-                  <span className="font-semibold">Address:</span>{' '}
-                  {order.address}
-                </p>
+                <p><FontAwesomeIcon icon={faMoneyBillWave} className="mr-2 text-indigo-500" /><strong>Total:</strong> ₹{order.totalAmount}</p>
+                <p><FontAwesomeIcon icon={faMapMarkerAlt} className="mr-2 text-indigo-500" /><strong>Address:</strong> {order.address}</p>
               </div>
 
               {/* Items */}
               <div>
                 <h4 className="text-md font-semibold mb-2 text-gray-800">
-                  <FontAwesomeIcon
-                    icon={faClipboardList}
-                    className="mr-2 text-indigo-500"
-                  />
-                  Items:
+                  <FontAwesomeIcon icon={faClipboardList} className="mr-2 text-indigo-500" /> Items:
                 </h4>
                 <div className="divide-y divide-gray-100">
                   {order.cart.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center py-3 gap-4"
-                    >
+                    <div key={index} className="flex items-center py-3 gap-4">
                       <img
-                        src={item.id >= 31 ?item.mainImage : `/${item.mainImage}`}
+                        src={item.id >= 31 ? item.mainImage : `/${item.mainImage}`}
                         alt={item.title}
                         className="w-14 h-14 rounded object-cover border"
                       />
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-800">
-                          {item.title}
-                        </p>
+                        <p className="text-sm font-medium text-gray-800">{item.title}</p>
                         <p className="text-xs text-gray-600">
-                          Qty: {item.quantity} × ₹{item.price} = ₹
-                          {item.quantity * item.price}
+                          Qty: {item.quantity} × ₹{item.price} = ₹{item.quantity * item.price}
                         </p>
                       </div>
                     </div>
@@ -225,6 +170,30 @@ const ProfilePage = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Cancel Confirmation Modal */}
+      {cancelTarget && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-xs bg-opacity-40 z-50">
+          <div className="bg-white p-6 rounded shadow-md text-center max-w-sm">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Cancel Order</h2>
+            <p className="mb-6 text-sm text-gray-600">Are you sure you want to cancel this order?</p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleCancel}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded"
+              >
+                Yes, Cancel
+              </button>
+              <button
+                onClick={() => setCancelTarget(null)}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+              >
+                No, Go Back
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

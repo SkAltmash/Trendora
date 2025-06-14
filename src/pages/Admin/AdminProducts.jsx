@@ -12,15 +12,16 @@ import {
 import { db } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import FullPageLoader from '../../components/FullPageLoader';
+import { toast } from 'react-toastify';
 
 const AdminProducts = () => {
   const { currentUser, loading } = useAuth();
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [fetching, setFetching] = useState(true);
-
   const [genderFilter, setGenderFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
     if (!loading && currentUser?.role === 'Admin') {
@@ -61,17 +62,16 @@ const AdminProducts = () => {
     await updateQuantity(firebaseId, newQty);
   };
 
-  const deleteProduct = async (firebaseId) => {
-    const confirm = window.confirm('Are you sure you want to delete this product?');
-    if (!confirm) return;
-
+  const deleteProduct = async () => {
     try {
-      await deleteDoc(doc(db, 'products', firebaseId));
-      setProducts((prev) => prev.filter((p) => p.firebaseId !== firebaseId));
-      alert('Product deleted successfully.');
+      await deleteDoc(doc(db, 'products', deleteTarget));
+      setProducts((prev) => prev.filter((p) => p.firebaseId !== deleteTarget));
+      toast.success('Product deleted successfully.');
     } catch (err) {
       console.error('Error deleting product:', err);
-      alert('Failed to delete product.');
+      toast.error('Failed to delete product.');
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
@@ -167,9 +167,7 @@ const AdminProducts = () => {
                   type="number"
                   min="0"
                   value={product.quantity}
-                  onChange={(e) =>
-                    updateQuantity(product.firebaseId, parseInt(e.target.value))
-                  }
+                  onChange={(e) => updateQuantity(product.firebaseId, parseInt(e.target.value))}
                   className="w-20 px-2 py-1 border rounded text-sm"
                 />
               </div>
@@ -194,7 +192,7 @@ const AdminProducts = () => {
                 </Link>
 
                 <button
-                  onClick={() => deleteProduct(product.firebaseId)}
+                  onClick={() => setDeleteTarget(product.firebaseId)}
                   className="px-4 py-1 rounded text-sm bg-gray-100 hover:bg-gray-200 text-red-600 border border-red-400"
                 >
                   Delete
@@ -202,6 +200,30 @@ const AdminProducts = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Confirmation Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-blur-xs bg-opacity-40 z-50">
+          <div className="bg-white rounded-lg shadow-md p-6 max-w-sm w-full">
+            <h2 className="text-lg font-semibold mb-4">Confirm Delete</h2>
+            <p className="text-sm text-gray-600 mb-6">Are you sure you want to delete this product?</p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => deleteProduct()}
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => setDeleteTarget(null)}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

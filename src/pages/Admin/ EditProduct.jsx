@@ -3,6 +3,7 @@ import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useNavigate, useParams } from 'react-router-dom';
 import FullPageLoader from '../../components/FullPageLoader';
+import { toast } from 'react-toastify';
 
 const EditProduct = () => {
   const { id } = useParams(); // firebaseId
@@ -19,12 +20,12 @@ const EditProduct = () => {
         if (snap.exists()) {
           setForm(snap.data());
         } else {
-          alert('Product not found');
+          toast.error('Product not found');
           navigate('/admin/products');
         }
       } catch (err) {
         console.error('Error fetching product:', err);
-        alert('Error loading product');
+        toast.error('Error loading product');
       } finally {
         setLoading(false);
       }
@@ -57,11 +58,11 @@ const EditProduct = () => {
         quantity: Number(form.quantity),
       };
       await updateDoc(doc(db, 'products', id), updatedProduct);
-      alert('Product updated successfully!');
+      toast.success('Product updated successfully!');
       navigate('/admin/products');
     } catch (err) {
       console.error('Error updating product:', err);
-      alert('Failed to update product');
+      toast.error('Failed to update product');
     } finally {
       setUpdating(false);
     }
@@ -105,7 +106,6 @@ const EditProduct = () => {
            alt="Main Preview" className="h-40 rounded border object-cover" />
           )}
         </div>
-
         <div>
           <label className="block font-medium mb-2">Product Images (6 URLs)</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
