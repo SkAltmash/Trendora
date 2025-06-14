@@ -28,7 +28,7 @@ const MainpageSkeleton = () => {
       {/* Men’s Collection Skeleton */}
       <div className="mb-10">
         <div className="h-6 w-40 bg-gray-200 animate-shine mb-6 rounded" />
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {[...Array(4)].map((_, i) => (
             <SkeletonCard key={`men-${i}`} />
           ))}
@@ -38,7 +38,7 @@ const MainpageSkeleton = () => {
       {/* Women’s Collection Skeleton */}
       <div className="mb-10">
         <div className="h-6 w-40 bg-gray-200 animate-shine mb-6 rounded" />
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {[...Array(4)].map((_, i) => (
             <SkeletonCard key={`women-${i}`} />
           ))}

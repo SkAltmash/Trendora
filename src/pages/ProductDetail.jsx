@@ -8,6 +8,8 @@ import FavoriteButton from '../components/FavoriteButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import ProductDetailSkeleton from '../components/ProductDetailSkeleton';
+import { FaShoppingCart } from 'react-icons/fa';
+
 function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
@@ -190,21 +192,32 @@ function ProductDetail() {
             </p>
           ) : null}
 
-          {/* Add to Cart */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            animate={isShaking ? { x: [0, -10, 10, -10, 10, 0] } : {}}
-            transition={{ duration: 0.5 }}
-            onClick={handleAddToCart}
-            disabled={product.quantity === 0}
-            className={`mt-6 px-6 py-2 text-white font-semibold rounded shadow ${
-              product.quantity === 0
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700'
-            }`}
-          >
-            {product.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-          </motion.button>
+         <div className="flex gap-3 md:gap-4 flex-wrap items-center mt-6">
+  {/* Add to Cart Button */}
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    animate={isShaking ? { x: [0, -10, 10, -10, 10, 0] } : {}}
+    transition={{ duration: 0.5 }}
+    onClick={handleAddToCart}
+    disabled={product.quantity === 0}
+    className={`px-6 py-2 text-white font-semibold rounded shadow ${
+      product.quantity === 0
+        ? 'bg-gray-400 cursor-not-allowed'
+        : 'bg-indigo-600 hover:bg-indigo-700'
+    }`}
+  >
+    {product.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+  </motion.button>
+
+  {/* Go to Cart Button */}
+  <Link to="/cart">
+    <button className="flex items-center gap-2 px-6 py-2 bg-yellow-500 text-white font-semibold rounded shadow hover:bg-yellow-600 transition">
+      Go to Cart <FaShoppingCart />
+    </button>
+  </Link>
+</div>
+
+ 
         </div>
       </div>
 

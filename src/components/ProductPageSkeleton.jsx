@@ -14,7 +14,7 @@ const ProductPageSkeleton = () => {
       </div>
 
       {/* Product Cards Skeleton */}
-      <div className="flex flex-wrap justify-center gap-4">
+      <div className="flex flex-wrap justify-center gap-2 md:gap-4">
         {[...Array(8)].map((_, i) => (
           <div
             key={i}

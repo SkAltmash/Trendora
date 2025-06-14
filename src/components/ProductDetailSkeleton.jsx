@@ -28,7 +28,7 @@ const ProductDetailSkeleton = () => {
       {/* Related Products */}
       <div className="mt-16">
         <div className="h-6 bg-gray-200 rounded w-1/3 mx-auto mb-6 shimmer" />
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {Array(4).fill(0).map((_, idx) => (
             <div key={idx} className="w-40 md:w-52 h-72 bg-gray-200 rounded shimmer" />
           ))}
