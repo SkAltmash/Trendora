@@ -19,8 +19,10 @@ import AdminOrders from './pages/Admin/AdminOrders';
 import AdminProducts from './pages/Admin/AdminProducts';
 import AddProduct from './pages/Admin/AddProduct';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import AdminUsers from './pages/Admin/AdminUsers';
 import { FavoriteProvider } from './context/FavoriteContext'; 
 import FavoritesPage from './pages/FavoritesPage';
+
 function App() {
   return (
     <AuthProvider> 
@@ -40,6 +42,8 @@ function App() {
      <Route path="/admin/orders" element={<AdminOrders />} />
        <Route path='/admin/products' element ={<AdminProducts />} />
        <Route path='/admin/add' element={<AddProduct />}></Route>
+      <Route path="/admin/user" element={<AdminUsers />} />
+
        <Route path="/admin/dashboard" element={<AdminDashboard />} />
        <Route path="/favorites" element={<FavoritesPage />} />
 
