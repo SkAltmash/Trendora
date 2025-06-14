@@ -55,14 +55,22 @@ const FavoritesPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 mt-20">
-      <h2 className="text-3xl font-bold text-indigo-700 mb-6">Your Favorite Products</h2>
 
       {loading ? (
         <p>Loading favorites...</p>
       ) : products.length === 0 ? (
-        <p className="text-gray-500 text-center">You haven't favorited any products yet.</p>
+            <div className="text-center  text-xl text-gray-600">
+          <div className='w-full flex justify-center'>
+          <img src="https://htmlstream.com/front/assets/svg/illustrations/oc-empty-cart.svg" alt="" className='w-100' />
+           </div>         
+    
+         <h3 className='m-2'>Your list is empty</h3>
+      </div>
+        
       ) : (
         <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
+                <h2 className="text-3xl font-bold text-indigo-700 mb-6">Your Favorite Products</h2>
+
           {products.map(product => (
             <Cart key={product.id} item={product} />
           ))}

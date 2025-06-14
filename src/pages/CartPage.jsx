@@ -25,11 +25,11 @@ function CartPage() {
   if (cart.length === 0) {
     return (
       <div className="text-center mt-20 text-xl text-gray-600">
-         Your cart is empty
-          <div className='w-full flex justify-center mt-10'>
-                    <img src="src/img/emptyCart.png" alt="" className='w-100' />
+          <div className='w-full flex justify-center'>
+          <img src="https://htmlstream.com/front/assets/svg/illustrations/oc-empty-cart.svg" alt="" className='w-100' />
            </div>         
-         
+    
+         <h3 className='m-2'>Your cart is empty</h3>
       </div>
     );
   }
