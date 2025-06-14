@@ -174,23 +174,32 @@ const AdminProducts = () => {
                 />
               </div>
 
-              <button
-                onClick={() => toggleStock(product.firebaseId, product.quantity)}
-                className={`px-4 py-1 rounded text-white text-sm ${
-                  product.quantity === 0
-                    ? 'bg-green-600 hover:bg-green-700'
-                    : 'bg-red-600 hover:bg-red-700'
-                }`}
-              >
-                {product.quantity === 0 ? 'Mark In Stock' : 'Mark Out of Stock'}
-              </button>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <button
+                  onClick={() => toggleStock(product.firebaseId, product.quantity)}
+                  className={`px-4 py-1 rounded text-white text-sm ${
+                    product.quantity === 0
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-red-600 hover:bg-red-700'
+                  }`}
+                >
+                  {product.quantity === 0 ? 'Mark In Stock' : 'Mark Out of Stock'}
+                </button>
 
-              <button
-                onClick={() => deleteProduct(product.firebaseId)}
-                className="mt-2 px-4 py-1 ml-2 rounded text-sm bg-red-600 hover:bg-red-7000 text-white border border-red-400"
-              >
-                Delete
-              </button>
+                <Link
+                  to={`/admin/edit/${product.firebaseId}`}
+                  className="px-4 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm"
+                >
+                  Edit
+                </Link>
+
+                <button
+                  onClick={() => deleteProduct(product.firebaseId)}
+                  className="px-4 py-1 rounded text-sm bg-gray-100 hover:bg-gray-200 text-red-600 border border-red-400"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>

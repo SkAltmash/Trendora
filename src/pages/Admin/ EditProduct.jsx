@@ -101,7 +101,8 @@ const EditProduct = () => {
             className="w-full p-2 border rounded mb-2"
           />
           {form.mainImage && (
-            <img src={`${form.mainImage.trim()}`} alt="Main Preview" className="h-40 rounded border object-cover" />
+            <img   src={form.id >= 31 ? form.mainImage?.trim() : `/${form.mainImage?.trim()}`}
+           alt="Main Preview" className="h-40 rounded border object-cover" />
           )}
         </div>
 
@@ -118,7 +119,7 @@ const EditProduct = () => {
                 />
                 {img && (
                   <img
-                    src={`${img.trim()}`}
+                    src={form.id >= 31 ? img?.trim() : `/${img}`}
                     alt={`Preview ${index + 1}`}
                     className="h-50 w-50 object-cover rounded border"
                   />

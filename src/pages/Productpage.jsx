@@ -13,8 +13,7 @@ function Productpage() {
   const [selectedGender, setSelectedGender] = useState('All');
   const [sortOrder, setSortOrder] = useState('default');
   const [loading, setLoading] = useState(true);
-  const [hideFilters, setHideFilters] = useState(false); // ✅ New
-
+  const [hideFilters, setHideFilters] = useState(false); 
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {

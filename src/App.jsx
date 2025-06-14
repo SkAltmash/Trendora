@@ -46,7 +46,7 @@ function App() {
 
        <Route path="/admin/dashboard" element={<AdminDashboard />} />
        <Route path="/favorites" element={<FavoritesPage />} />
-        <Route path='/admin/edit-product/:id' element={<EditProduct />} />
+        <Route path='/admin/edit/:id' element={<EditProduct />} />
       </Routes>
         <Footer />
 
