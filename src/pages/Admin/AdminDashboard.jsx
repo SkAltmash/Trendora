@@ -56,16 +56,22 @@ const AdminDashboard = () => {
         ordersSnap.docs.forEach((doc, index) => {
           const data = doc.data();
           const amount = data.totalAmount || 0;
-          revenue += amount;
 
-          const createdAt = data.createdAt?.toDate();
-          if (createdAt) {
-            const month = createdAt.toLocaleString('default', { month: 'short' });
-            revenueByMonth[month] = (revenueByMonth[month] || 0) + amount;
+          // Exclude cancelled orders from revenue
+          if (data.status !== 'cancelled') {
+            revenue += amount;
+
+            const createdAt = data.createdAt?.toDate();
+            if (createdAt) {
+              const month = createdAt.toLocaleString('default', { month: 'short' });
+              revenueByMonth[month] = (revenueByMonth[month] || 0) + amount;
+            }
           }
 
+          // Count order statuses
           orderStatusCount[data.status] = (orderStatusCount[data.status] || 0) + 1;
 
+          // Only push recent 5 orders
           if (index < 5) {
             recentOrders.push({ id: doc.id, ...data });
           }
@@ -95,7 +101,6 @@ const AdminDashboard = () => {
   if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') return <Navigate to="/" />;
 
-  // Bar Chart Data (Monthly Revenue)
   const barData = {
     labels: Object.keys(stats.revenueByMonth),
     datasets: [
@@ -117,7 +122,6 @@ const AdminDashboard = () => {
     },
   };
 
-  // Pie Chart Data (Order Status)
   const pieData = {
     labels: Object.keys(stats.orderStatusCount),
     datasets: [
@@ -153,15 +157,13 @@ const AdminDashboard = () => {
             <StatCard title="Orders" value={stats.orders} color="bg-purple-500" />
             <StatCard title="Revenue" value={`₹${stats.revenue}`} color="bg-yellow-500" />
           </div>
-     
 
-       {/* Quick Links */}
+          {/* Quick Links */}
           <div className="grid sm:grid-cols-3 gap-4 mb-10">
             <QuickLink to="/admin/products" title="Manage Products" color="blue" />
             <QuickLink to="/admin/orders" title="Manage Orders" color="green" />
             <QuickLink to="/admin/user" title="Manage Users" color="yellow" />
             <QuickLink to="/admin/coupons" title="Manage Coupons Codes" color="green" />
-
           </div>
 
           {/* Charts */}
@@ -179,8 +181,6 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-
-        
 
           {/* Recent Orders */}
           <div>

@@ -38,9 +38,13 @@ function CartPage() {
     (total, item) => total + item.price * item.quantity,
     0
   );
-
+  window.scroll({
+  top: 0,
+  left: 0,
+  behavior: 'smooth'
+});
   return (
-    <div className="max-w-4xl mx-auto mt-20 px-4 h-screen">
+    <div className="max-w-4xl mx-auto mt-20 px-4 min-h-screen">
       <h2 className="text-3xl font-bold mb-6 text-indigo-700">Your Cart</h2>
 
       {cart.map((item) => (
