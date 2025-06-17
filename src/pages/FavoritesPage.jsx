@@ -68,13 +68,16 @@ const FavoritesPage = () => {
       </div>
         
       ) : (
+        <>
+       <h2 className="text-3xl font-bold text-indigo-700 mb-6">Your Favorite Products</h2>
+
         <div className="flex flex-wrap gap-2 md:gap-4 justify-center">
-                <h2 className="text-3xl font-bold text-indigo-700 mb-6">Your Favorite Products</h2>
 
           {products.map(product => (
             <Cart key={product.id} item={product} />
           ))}
         </div>
+        </>
       )}
     </div>
   );

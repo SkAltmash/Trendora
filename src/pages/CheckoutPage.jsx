@@ -3,8 +3,6 @@ import {
   addDoc,
   collection,
   Timestamp,
-  updateDoc,
-  doc,
   getDocs,
   query,
   where,
@@ -25,7 +23,7 @@ function CheckoutPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [couponStatus, setCouponStatus] = useState('idle'); // idle, applying, success, error
+  const [couponStatus, setCouponStatus] = useState('idle');
 
   const totalPrice = cart?.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -33,15 +31,12 @@ function CheckoutPage() {
   ) || 0;
 
   let discount = 0;
-
   if (appliedCoupon) {
     if (appliedCoupon.discountType === 'flat') {
       discount = appliedCoupon.discount;
     } else if (appliedCoupon.discountType === 'percent') {
       discount = (totalPrice * appliedCoupon.discount) / 100;
     }
-
-    // Prevent applying if minAmount not met
     if (totalPrice < appliedCoupon.minAmount) {
       discount = 0;
     }
@@ -63,13 +58,11 @@ function CheckoutPage() {
 
       if (!snapshot.empty) {
         const coupon = snapshot.docs[0].data();
-
         if (totalPrice < coupon.minAmount) {
           toast.error(`Minimum order ₹${coupon.minAmount} required for this coupon`);
           setCouponStatus('error');
           return;
         }
-
         setAppliedCoupon(coupon);
         setCouponStatus('success');
         toast.success('Coupon Applied!');
@@ -90,6 +83,7 @@ function CheckoutPage() {
     try {
       setPlacingOrder(true);
 
+      // Check stock for all items
       for (const item of cart) {
         const productQuery = query(
           collection(db, 'products'),
@@ -111,6 +105,7 @@ function CheckoutPage() {
         }
       }
 
+      // Create order, but do not reduce product quantity
       await addDoc(collection(db, 'orders'), {
         userId: currentUser.uid,
         email: currentUser.email,
@@ -124,22 +119,6 @@ function CheckoutPage() {
         discountValue: discount,
         discountType: appliedCoupon?.discountType || null,
       });
-
-      for (const item of cart) {
-        const productQuery = query(
-          collection(db, 'products'),
-          where('id', '==', item.id)
-        );
-        const querySnapshot = await getDocs(productQuery);
-        if (!querySnapshot.empty) {
-          const productDoc = querySnapshot.docs[0];
-          const productRef = doc(db, 'products', productDoc.id);
-          const productData = productDoc.data();
-          const newQty = Math.max(productData.quantity - item.quantity, 0);
-
-          await updateDoc(productRef, { quantity: newQty });
-        }
-      }
 
       clearCart();
       toast.success('Order placed successfully! 🎉');
@@ -171,7 +150,6 @@ function CheckoutPage() {
         <p className="text-center text-gray-500">Your cart is empty.</p>
       ) : (
         <>
-          {/* Cart Summary */}
           <div className="space-y-4">
             {cart.map((item) => (
               <div
@@ -184,7 +162,6 @@ function CheckoutPage() {
             ))}
           </div>
 
-          {/* Coupon Code */}
           <div className="mt-6">
             <label className="block mb-2 font-medium text-gray-700">Coupon Code</label>
             <div className="flex gap-2">
@@ -216,18 +193,15 @@ function CheckoutPage() {
             )}
           </div>
 
-          {/* Totals */}
           <div className="text-right mt-4">
             <p className="text-lg text-gray-700 line-through">Total: ₹{totalPrice}</p>
-            {appliedCoupon && (
+            {appliedCoupon ? (
               <p className="text-xl font-bold text-green-700">Final: ₹{finalPrice}</p>
-            )}
-            {!appliedCoupon && (
+            ) : (
               <p className="text-xl font-bold text-indigo-700">Total: ₹{totalPrice}</p>
             )}
           </div>
 
-          {/* Address */}
           <div className="mt-6">
             <label className="block mb-2 font-medium text-gray-700">Delivery Address</label>
             <textarea
@@ -239,7 +213,6 @@ function CheckoutPage() {
             />
           </div>
 
-          {/* Payment Options */}
           <div className="mt-6">
             <label className="block mb-2 font-medium text-gray-700">Payment Method</label>
             <div className="flex flex-col gap-2">
@@ -265,7 +238,6 @@ function CheckoutPage() {
             </div>
           </div>
 
-          {/* Place Order Button */}
           <button
             onClick={handlePlaceOrder}
             disabled={placingOrder}

@@ -6,11 +6,13 @@ import {
   doc,
   orderBy,
   query,
+  where,
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Navigate } from 'react-router-dom';
 import FullPageLoader from '../../components/FullPageLoader';
+
 const AdminOrders = () => {
   const { currentUser, loading } = useAuth();
   const [orders, setOrders] = useState([]);
@@ -42,18 +44,39 @@ const AdminOrders = () => {
 
   const updateStatus = async (orderId, newStatus) => {
     try {
+      const orderToUpdate = orders.find((order) => order.id === orderId);
+
+      if (newStatus === 'delivered') {
+        for (const item of orderToUpdate.cart) {
+          const q = query(collection(db, 'products'), where('id', '==', item.id));
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const productDoc = querySnapshot.docs[0];
+            const currentQty = productDoc.data().quantity;
+            const newQty = Math.max(currentQty - item.quantity, 0);
+
+            await updateDoc(doc(db, 'products', productDoc.id), {
+              quantity: newQty,
+            });
+          } else {
+            console.warn(`Product with ID ${item.id} not found in DB.`);
+          }
+        }
+      }
+
       await updateDoc(doc(db, 'orders', orderId), { status: newStatus });
+
       setOrders((prev) =>
         prev.map((order) =>
           order.id === orderId ? { ...order, status: newStatus } : order
         )
       );
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error('Error updating status or reducing stock:', error);
     }
   };
 
-  // Filters
   const filteredOrders = orders.filter((order) => {
     const matchStatus =
       statusFilter === 'All' || order.status === statusFilter.toLowerCase();
@@ -62,7 +85,6 @@ const AdminOrders = () => {
     return matchStatus && matchPayment;
   });
 
-  // Security
   if (loading) return <FullPageLoader />;
   if (!currentUser || currentUser.role !== 'Admin') {
     console.warn('Unauthorized access attempt:', currentUser?.email);
@@ -76,7 +98,7 @@ const AdminOrders = () => {
       <h1 className="text-3xl font-bold mb-6 text-indigo-700">Admin Orders</h1>
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-4 mb-6 bg-gray-50 p-4 rounded shadow-sm  top-20 z-10">
+      <div className="flex flex-wrap gap-4 mb-6 bg-gray-50 p-4 rounded shadow-sm top-20 z-10">
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
